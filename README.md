@@ -13,7 +13,7 @@ A comprehensive airline ticket booking and airport check-in management system im
 ## Project Structure
 
 ```text
-project_root/
+project/
 ├── src/
 │   ├── __init__.py
 │   ├── booking.py
