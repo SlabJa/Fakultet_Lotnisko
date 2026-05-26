@@ -38,6 +38,7 @@ project_root/
 │   └── test_validators.py
 ├── requirements.txt
 └── README.md
+```
 
 ## Installation
 Clone the repository
