@@ -1,6 +1,6 @@
 # Airline Booking & Check-In System
 
-A comprehensive airline ticket booking and airport check-in management system implemented in Python with unit and BDD tests.
+A comprehensive airline ticket booking and airport check-in management system implemented in Python with unittest, pytest and BDD tests.
 
 ## Features
 
