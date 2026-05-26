@@ -41,12 +41,12 @@ project_root/
 ```
 
 ## Installation
-Clone the repository
-Ensure you have **Python 3.12** installed on your system.
-Install dependencies (if necessary): pip install -r requirements.txt
+1.Clone the repository
+2.Ensure you have **Python 3.12** installed on your system.
+3.Install dependencies (if necessary): pip install -r requirements.txt
 
 ## Running Tests
-Run all tests with: pytest
+*Run all tests with: pytest
 
-For detailed output and BDD steps: pytest -v
-To check branch coverage: pytest --cov=src --cov-branch
+*For detailed output and BDD steps: pytest -v
+*To check branch coverage: pytest --cov=src --cov-branch
