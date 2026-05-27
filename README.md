@@ -48,9 +48,8 @@ project/
 ## Running Tests
 * Run all tests with:   pytest
 
-* For detailed output and BDD steps:    pytest -v
-* To generate html report:              pytest html
-* To check branch coverage:             pytest --cov=src --cov-branch
+* For detailed output and BDD steps: pytest -v
+* To check branch coverage: pytest --cov=src --cov-branch
 
 ## Additional code quality checks
 * **Pylint** (Static analysis and code quality rating): pylint ./src ./tests
