@@ -1,9 +1,10 @@
 import uuid
 from src.seating import SeatMap
 
+
 class Flight:
     """Klasa reprezentująca lot i zarządzająca dostępnością miejsc na podstawie mapy pokładu."""
-    
+
     def __init__(self, flight_number, total_seats=180, seats_per_row=None, seat_map=None):
         """Inicjalizuje obiekt lotu z mapą miejsc (własną, automatyczną lub o określonej szerokości rzędu)."""
         if seat_map:
@@ -12,19 +13,19 @@ class Flight:
         else:
             if total_seats <= 0:
                 raise ValueError("Lot musi mieć co najmniej jedno miejsce.")
-            
+
             # Jeśli szerokość rzędu nie została podana, dopasowujemy ją do rozmiaru samolotu
             if seats_per_row is None:
                 seats_per_row = min(6, total_seats)
-                
-            if not (1 <= seats_per_row <= 6):
+
+            if not 1 <= seats_per_row <= 6:
                 raise ValueError("Liczba miejsc w rzędzie musi być od 1 do 6 (A-F).")
-            
+
             # Wymaganą liczbę rzędów dla żądanej pojemności
             rows = max(1, (total_seats + seats_per_row - 1) // seats_per_row)
             self.seat_map = SeatMap(rows, seats_per_row)
             self.total_seats = rows * seats_per_row
-            
+
         self.flight_number = flight_number
 
     @property
@@ -40,25 +41,24 @@ class Flight:
         """Blokuje konkretny fotel lub automatycznie przydziela pierwsze wolne miejsce od przodu."""
         if not self.has_available_seats():
             raise LookupError("Brak wolnych miejsc na ten lot.")
-        
+
         if seat_number:
             self.seat_map.reserve_seat(seat_number)
             return seat_number
-        else:
-            # Szukanie pierwszego wolnego miejsca
-            for r in range(1, self.seat_map.rows + 1):
-                for l in self.seat_map.letters:
-                    candidate = f"{r}{l}"
-                    if candidate not in self.seat_map.reserved_seats:
-                        self.seat_map.reserve_seat(candidate)
-                        return candidate
-            raise LookupError("Brak wolnych miejsc na ten lot.")
+        # Szukanie pierwszego wolnego miejsca
+        for r in range(1, self.seat_map.rows + 1):
+            for l in self.seat_map.letters:
+                candidate = f"{r}{l}"
+                if candidate not in self.seat_map.reserved_seats:
+                    self.seat_map.reserve_seat(candidate)
+                    return candidate
+        raise LookupError("Brak wolnych miejsc na ten lot.")
 
     def release_seat(self, seat_number):
         """Zwalnia wskazane miejsce na mapie pokładu samolotu."""
         if not seat_number:
             raise ValueError("Należy podać numer miejsca do zwolnienia.")
-            
+
         if seat_number in self.seat_map.reserved_seats:
             self.seat_map.reserved_seats.remove(seat_number)
         else:
@@ -67,22 +67,22 @@ class Flight:
 
 class Ticket:
     """Klasa reprezentująca bilet pasażera z uwzględnieniem klas podróży oraz polityki bagażowej."""
-    
+
     def __init__(self, passenger_name, age, base_price, travel_class="ECONOMY", baggage_weight=0.0):
         """Inicjalizuje bilet wraz z walidacją typów i wartości wejściowych."""
         if not isinstance(age, (int, float)):
             raise TypeError("Wiek musi być liczbą (int lub float).")
         if age < 0:
             raise ValueError("Wiek musi być liczbą nieujemną.")
-            
+
         if not isinstance(base_price, (int, float)):
             raise TypeError("Cena bazowa musi być liczbą (int lub float).")
         if base_price < 0:
             raise ValueError("Cena bazowa musi być liczbą nieujemną.")
-            
+
         if travel_class not in ["ECONOMY", "BUSINESS", "FIRST"]:
             raise ValueError("Niepoprawna klasa podróży.")
-            
+
         if not isinstance(baggage_weight, (int, float)):
             raise TypeError("Waga bagażu musi być liczbą (int lub float).")
         if baggage_weight < 0:
@@ -124,7 +124,7 @@ class Ticket:
 
 class Booking:
     """Klasa zarządzająca pełnym cyklem życia oraz maszyną stanów rezerwacji."""
-    
+
     def __init__(self, flight, ticket):
         """Inicjalizuje proces rezerwacji w stanie DRAFT i generuje unikalny kod PNR."""
         self.flight = flight

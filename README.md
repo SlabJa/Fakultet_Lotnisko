@@ -4,7 +4,7 @@ A comprehensive airline ticket booking and airport check-in management system im
 
 ## Features
 
-* Ticket booking and dynamic pricing (age, class, baggage)
+* Ticket booking and pricing (age, class, baggage)
 * Loyalty program management (earning miles, tiers, and discounts)
 * Flight seating management and automatic seat assignment
 * Airport check-in, security baggage scanning, and boarding gate validation
@@ -46,7 +46,13 @@ project/
 3. Install dependencies (if necessary): pip install -r requirements.txt
 
 ## Running Tests
-* Run all tests with: pytest
+* Run all tests with:   pytest
 
-* For detailed output and BDD steps: pytest -v
-* To check branch coverage: pytest --cov=src --cov-branch
+* For detailed output and BDD steps:    pytest -v
+* To generate html report:              pytest html
+* To check branch coverage:             pytest --cov=src --cov-branch
+
+## Additional code quality checks
+* **Pylint** (Static analysis and code quality rating): pylint ./src ./tests
+* **Vulture** (Dead code detection):                    vulture ./src
+* **Flake8** (Style & PEP 8 enforcement):               flake8 ./src ./tests

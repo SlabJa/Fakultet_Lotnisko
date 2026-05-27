@@ -1,18 +1,19 @@
-import pytest
 from unittest.mock import Mock
+import pytest
 from src.checkin import SecurityScanner, CheckInDesk, BoardingGate
 from src.booking import Ticket, Booking, Flight
 
+
 class TestSecurityScanner:
     """Zestaw testów weryfikujących działanie skanera bezpieczeństwa na lotnisku."""
-    
+
     @pytest.fixture
     def scanner(self):
         """Fixture dostarczający zainicjalizowany skaner bezpieczeństwa."""
         return SecurityScanner()
 
     @pytest.mark.parametrize("baggage", [
-        [], 
+        [],
         ["Książka", "Laptop", "Ubrania"],
         ["Zabawka", "Klucze"]
     ])
@@ -41,31 +42,32 @@ class TestSecurityScanner:
         with pytest.raises(expected_error):
             scanner.scan_baggage(invalid_type)
 
+
 class TestCheckInDesk:
     """Zestaw testów dla stanowiska odprawy z wykorzystaniem atrap (Mock) skanera."""
-    
+
     @pytest.fixture
     def checkin_env(self):
         """Fixture konfigurujący stanowisko odprawy oraz poprawnie opłaconą rezerwację."""
         mock_scanner = Mock(spec=SecurityScanner)
         desk = CheckInDesk(mock_scanner)
-        
+
         flight = Flight("LO3801", total_seats=10)
         ticket = Ticket("Jan Kowalski", 30, 200.0)
         booking = Booking(flight, ticket)
-        
+
         booking.confirm_reservation()
         booking.change_status("PAID")
-        
+
         return desk, mock_scanner, booking
 
     def test_issue_boarding_pass_success(self, checkin_env):
         """Test pozytywny wystawienia karty pokładowej po udanej weryfikacji i skanowaniu."""
         desk, mock_scanner, booking = checkin_env
         mock_scanner.scan_baggage.return_value = True
-        
+
         b_pass = desk.issue_boarding_pass(booking, "AB1234567", ["Laptop"])
-        
+
         assert b_pass.startswith("PASS:")
         assert booking.pnr in b_pass
         assert "Jan Kowalski" in b_pass
@@ -93,8 +95,8 @@ class TestCheckInDesk:
     def test_security_rejection(self, checkin_env):
         """Test sprawdzający zablokowanie odprawy w przypadku odrzucenia bagażu przez skaner."""
         desk, mock_scanner, booking = checkin_env
-        mock_scanner.scan_baggage.return_value = False 
-        
+        mock_scanner.scan_baggage.return_value = False
+
         with pytest.raises(PermissionError):
             desk.issue_boarding_pass(booking, "AB1234567", ["Narkotyki"])
 
@@ -102,7 +104,7 @@ class TestCheckInDesk:
     def test_wrong_booking_status(self, checkin_env, wrong_status):
         """Testy negatywne weryfikujące zablokowanie odprawy dla nieopłaconych biletów."""
         desk, _, booking = checkin_env
-        
+
         if wrong_status == "DRAFT":
             booking = Booking(Flight("LO", 1), Ticket("A", 1, 1))
         elif wrong_status == "RESERVED":
@@ -114,9 +116,10 @@ class TestCheckInDesk:
         with pytest.raises(ValueError):
             desk.issue_boarding_pass(booking, "AB1234567", [])
 
+
 class TestBoardingGate:
     """Zestaw testów autoryzacji wejścia na pokład przy samej bramce lotu."""
-    
+
     @pytest.fixture
     def gate(self):
         """Fixture dostarczający czystą bramkę dla konkretnego lotu."""

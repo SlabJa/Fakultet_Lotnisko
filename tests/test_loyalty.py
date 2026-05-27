@@ -1,6 +1,7 @@
 import pytest
 from src.loyalty import LoyaltyAccount
 
+
 class TestLoyaltyProgram:
     """Zestaw testów jednostkowych weryfikujących logikę biznesową programu lojalnościowego."""
 
@@ -39,7 +40,7 @@ class TestLoyaltyProgram:
         """Test sprawdzający poprawność wydawania mil oraz ewentualny spadek statusu konta."""
         account.add_miles(20000)
         account.redeem_miles(15000)
-        
+
         assert account.miles == 5000
         assert account.tier == "BRONZE"
 

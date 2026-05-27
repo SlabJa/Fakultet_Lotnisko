@@ -1,7 +1,7 @@
 import unittest
-import json
 from unittest.mock import patch, mock_open, Mock
 from src.storage import BookingStorage
+
 
 class TestBookingStorageIO(unittest.TestCase):
     """Zestaw testów jednostkowych weryfikujących operacje wejścia/wyjścia (I/O)."""
@@ -13,7 +13,7 @@ class TestBookingStorageIO(unittest.TestCase):
         """Test pozytywny sprawdzający poprawny zapis struktury słownikowej do pliku JSON."""
         storage = BookingStorage("test.json")
         dummy_data = {"pnr": "XYZ123", "status": "PAID"}
-        
+
         with patch("builtins.open", mock_open()) as mocked_file:
             result = storage.save_to_json(dummy_data)
             self.assertTrue(result)
@@ -30,7 +30,7 @@ class TestBookingStorageIO(unittest.TestCase):
         """Test pozytywny weryfikujący poprawny odczyt i parsowanie danych z pliku JSON."""
         storage = BookingStorage("test.json")
         valid_json = '{"pnr": "XYZ123", "status": "PAID"}'
-        
+
         with patch("builtins.open", mock_open(read_data=valid_json)):
             result = storage.load_from_json()
             self.assertEqual(result, {"pnr": "XYZ123", "status": "PAID"})
@@ -52,7 +52,7 @@ class TestBookingStorageIO(unittest.TestCase):
     def test_export_to_csv_success(self):
         """Test pozytywny weryfikujący poprawny eksport danych rezerwacji do pliku CSV."""
         storage = BookingStorage()
-        
+
         # Atrapa rezerwacji
         mock_booking = Mock()
         mock_booking.pnr = "WAW123"
@@ -75,13 +75,14 @@ class TestBookingStorageIO(unittest.TestCase):
         """Test negatywny weryfikujący obsługę błędu wejścia/wyjścia podczas generowania CSV."""
         storage = BookingStorage()
         mock_booking = Mock()
-        
+
         with patch("builtins.open", side_effect=IOError("Brak dostępu do dysku")):
             with self.assertRaises(IOError):
                 storage.export_to_csv("manifest.csv", [mock_booking])
 
     def tearDown(self):
         pass
+
 
 if __name__ == "__main__":
     unittest.main()

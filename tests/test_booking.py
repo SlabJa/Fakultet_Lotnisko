@@ -1,5 +1,7 @@
 import pytest
 from src.booking import Ticket, Booking, Flight
+from src.seating import SeatMap
+
 
 class TestTicketBoundaryValues:
     """Testy logiczne wyliczania cen biletów na granicach przedziałów wiekowych."""
@@ -36,7 +38,7 @@ class TestFlightInventory:
         """Test negatywny: Próba rezerwacji ponad limit miejsc kończy się błędem."""
         flight = Flight("LO3801", total_seats=1)
         flight.reserve_seat()
-        
+
         assert flight.has_available_seats() is False
         with pytest.raises(LookupError):
             flight.reserve_seat()
@@ -44,11 +46,11 @@ class TestFlightInventory:
     def test_flight_release_seat(self):
         """Test sprawdzający, czy zwalnianie konkretnego miejsca działa poprawnie."""
         flight = Flight("LO3801", total_seats=5)
-        
+
         # Automatycznie przydzielone miejsce
-        assigned_seat = flight.reserve_seat() 
-        flight.release_seat(assigned_seat) 
-        
+        assigned_seat = flight.reserve_seat()
+        flight.release_seat(assigned_seat)
+
         assert flight.reserved_seats == 0
 
     def test_invalid_flight_creation(self):
@@ -106,12 +108,12 @@ class TestTicketClassesAndBaggage:
         (30, "ECONOMY", 25.0, 150.0),
         (30, "BUSINESS", 15.0, 150.0),
         (30, "FIRST", 10.0, 200.0),
-        
+
         # --- Dzieci - 50% zniżki ---
         (8, "ECONOMY", 20.0, 50.0),
         (8, "BUSINESS", 15.0, 75.0),
         (8, "FIRST", 10.0, 100.0),
-        
+
         # --- Seniorzy - 30% zniżki ---
         (70, "ECONOMY", 20.0, 70.0),
         (70, "BUSINESS", 15.0, 105.0),
@@ -130,7 +132,7 @@ class TestTicketClassesAndBaggage:
         """Test sprawdzający przydział darmowego cateringu dla pierwszej klasy."""
         economy_ticket = Ticket("Adam", 30, 100.0, "ECONOMY")
         first_ticket = Ticket("Ewa", 30, 100.0, "FIRST")
-        
+
         assert economy_ticket.has_free_meal() is False
         assert first_ticket.has_free_meal() is True
 
@@ -150,53 +152,49 @@ class TestBookingSeatIntegration:
 
     def test_confirm_reservation_with_specific_seat(self):
         """Test pozytywny: Rezerwacja udaje się na dokładnie wybrane przez pasażera miejsce."""
-        from src.seating import SeatMap
         flight = Flight("LO3801", seat_map=SeatMap(10, 6))
         ticket = Ticket("Jan", 30, 100.0)
         booking = Booking(flight, ticket)
-        
+
         booking.confirm_reservation("3B")
-        
+
         assert booking.assigned_seat == "3B"
         assert "3B" in flight.seat_map.reserved_seats
 
     def test_confirm_reservation_automatic_assignment(self):
         """Test pozytywny: Brak wybranego miejsca skutkuje automatycznym przydziałem pierwszego wolnego fotelu."""
-        from src.seating import SeatMap
         flight = Flight("LO3801", seat_map=SeatMap(5, 4))
         ticket = Ticket("Anna", 25, 100.0)
         booking = Booking(flight, ticket)
-        
-        booking.confirm_reservation() # Wywołanie bez podawania preferencji
-        
-        assert booking.assigned_seat == "1A" # Pierwsze wolne od przodu samolotu
+
+        booking.confirm_reservation()  # Wywołanie bez podawania preferencji
+
+        assert booking.assigned_seat == "1A"  # Pierwsze wolne od przodu samolotu
         assert "1A" in flight.seat_map.reserved_seats
 
     def test_confirm_reservation_seat_already_taken(self):
         """Test negatywny: Próba rezerwacji zajętego już fotela kończy się błędem."""
-        from src.seating import SeatMap
         flight = Flight("LO3801", seat_map=SeatMap(5, 4))
         ticket1 = Ticket("Jan", 30, 100.0)
         ticket2 = Ticket("Anna", 25, 100.0)
-        
+
         booking1 = Booking(flight, ticket1)
         booking2 = Booking(flight, ticket2)
-        
+
         booking1.confirm_reservation("2C")
-        
+
         with pytest.raises(RuntimeError):
-            booking2.confirm_reservation("2C") # Fotel 2C jest już zajęty przez Jana!
+            booking2.confirm_reservation("2C")  # Fotel 2C jest już zajęty przez Jana!
 
     def test_cancellation_frees_assigned_seat(self):
         """Test sprawdzający, czy anulowanie rezerwacji zwalnia dokładnie to przypisane miejsce na mapie."""
-        from src.seating import SeatMap
         flight = Flight("LO3801", seat_map=SeatMap(5, 4))
         ticket = Ticket("Marek", 40, 100.0)
         booking = Booking(flight, ticket)
-        
+
         booking.confirm_reservation("4D")
         assert "4D" in flight.seat_map.reserved_seats
-        
+
         booking.change_status("CANCELLED")
         assert "4D" not in flight.seat_map.reserved_seats
         assert flight.reserved_seats == 0

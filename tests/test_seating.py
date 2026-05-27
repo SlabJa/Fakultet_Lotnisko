@@ -1,14 +1,15 @@
 import pytest
 from src.seating import SeatMap
 
+
 class TestSeatMap:
     """Zestaw testów jednostkowych weryfikujących logikę zarządzania miejscami w samolocie."""
-    
+
     @pytest.fixture
     def standard_plane(self):
         """Fixture konfigurujący standardowy układ miejsc (np. Boeing/Airbus, 3x3)."""
         return SeatMap(30, 6)
-        
+
     @pytest.fixture
     def small_plane(self):
         """Fixture konfigurujący układ miejsc dla małego samolotu regionalnego (2x2)."""
@@ -23,7 +24,7 @@ class TestSeatMap:
     ])
     def test_invalid_initialization(self, rows, seats, expected_exception):
         """Testy wartości brzegowych weryfikujące poprawność parametrów konstrukcyjnych."""
-        with pytest.raises((ValueError, TypeError)):
+        with pytest.raises(expected_exception):
             SeatMap(rows, seats)
 
     @pytest.mark.parametrize("seat, expected", [

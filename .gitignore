@@ -1,0 +1,50 @@
+# ==========================================
+# Środowiska wirtualne (Virtual Environments)
+# ==========================================
+venv/
+env/
+.venv/
+ENV/
+
+# ==========================================
+# Cache i pliki kompilacji Pythona
+# ==========================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ==========================================
+# Narzędzia testowe i raporty (Pytest, Coverage)
+# ==========================================
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ==========================================
+# Narzędzia statycznej analizy (Pylint, Flake8)
+# ==========================================
+.mypy_cache/
+.pylintjs*
+
+# ==========================================
+# Pliki lokalnej "bazy danych" aplikacji (JSON / CSV)
+# ==========================================
+# Blokujemy te pliki, by nie wypychać prywatnych testowych danych na GitHuba
+bookings.json
+manifest.csv
+*.log
+
+# ==========================================
+# Pliki systemowe (macOS / Windows)
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Konfiguracja edytorów i IDE (VS Code, PyCharm)
+# ==========================================
+.vscode/
+.idea/
+*.swp

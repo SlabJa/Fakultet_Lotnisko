@@ -1,6 +1,7 @@
 import unittest
 from src.validators import validate_email, validate_phone, validate_pnr, validate_card_luhn
 
+
 class TestValidatorsUnittest(unittest.TestCase):
 
     def setUp(self):
@@ -26,18 +27,18 @@ class TestValidatorsUnittest(unittest.TestCase):
     # --- TESTY DLA TELEFONU (MIĘDZYNARODOWE) ---
     def test_validate_phone_correct(self):
         """Testy pozytywne dla poprawnych, międzynarodowych formatów telefonów."""
-        self.assertTrue(validate_phone("123456789"))         # PL bez kierunkowego
-        self.assertTrue(validate_phone("+48 123 456 789"))   # PL z kierunkowym i spacjami
-        self.assertTrue(validate_phone("+1-800-555-0199"))   # US z myślnikami
-        self.assertTrue(validate_phone("+44 (20) 7946 0958")) # UK z nawiasami
-        self.assertTrue(validate_phone("+81345678901"))      # JP ciągiem
+        self.assertTrue(validate_phone("123456789"))            # PL bez kierunkowego
+        self.assertTrue(validate_phone("+48 123 456 789"))      # PL z kierunkowym i spacjami
+        self.assertTrue(validate_phone("+1-800-555-0199"))      # US z myślnikami
+        self.assertTrue(validate_phone("+44 (20) 7946 0958"))   # UK z nawiasami
+        self.assertTrue(validate_phone("+81345678901"))         # JP ciągiem
 
     def test_validate_phone_incorrect_format(self):
         """Testy negatywne dla telefonów o niepoprawnej długości lub ze złymi znakami."""
-        self.assertFalse(validate_phone("123456"))            # Za krótki (<7 cyfr)
-        self.assertFalse(validate_phone("+1234567890123456")) # Za długi (>15 cyfr)
-        self.assertFalse(validate_phone("123a45678"))         # Zawiera literę
-        self.assertFalse(validate_phone("++48123456789"))     # Podwójny plus na początku
+        self.assertFalse(validate_phone("123456"))              # Za krótki (<7 cyfr)
+        self.assertFalse(validate_phone("+1234567890123456"))   # Za długi (>15 cyfr)
+        self.assertFalse(validate_phone("123a45678"))           # Zawiera literę
+        self.assertFalse(validate_phone("++48123456789"))       # Podwójny plus na początku
 
     def test_validate_phone_wrong_type(self):
         """Test negatywny sprawdzający rzucanie TypeError dla telefonu."""
@@ -52,9 +53,9 @@ class TestValidatorsUnittest(unittest.TestCase):
 
     def test_validate_pnr_incorrect(self):
         """Testy negatywne dla błędnych kodów PNR (nieprawidłowe znaki lub długość)."""
-        self.assertFalse(validate_pnr("waw123"))  # Małe litery
-        self.assertFalse(validate_pnr("WAW12"))   # Za krótki
-        self.assertFalse(validate_pnr("WAW1234")) # Za długi
+        self.assertFalse(validate_pnr("waw123"))    # Małe litery
+        self.assertFalse(validate_pnr("WAW12"))     # Za krótki
+        self.assertFalse(validate_pnr("WAW1234"))   # Za długi
 
     def test_validate_pnr_wrong_type(self):
         """Test negatywny sprawdzający rzucanie TypeError dla kodu PNR."""
@@ -64,13 +65,13 @@ class TestValidatorsUnittest(unittest.TestCase):
     # --- TESTY DLA ALGORYTMU LUHNA (KARTY PŁATNICZE) ---
     def test_luhn_correct_cards(self):
         """Testy pozytywne dla prawidłowych numerów kart (zgodnych z algorytmem Luhna)."""
-        self.assertTrue(validate_card_luhn("4111-1111-1111-1111")) # Prawdziwa testowa Visa
-        self.assertTrue(validate_card_luhn("5111111111111118")) # Prawdziwy testowy MasterCard
+        self.assertTrue(validate_card_luhn("4111-1111-1111-1111"))  # Prawdziwa testowa Visa
+        self.assertTrue(validate_card_luhn("5111111111111118"))     # Prawdziwy testowy MasterCard
 
     def test_luhn_incorrect_cards(self):
         """Testy negatywne dla błędnych numerów kart (zła cyfra kontrolna lub długość)."""
-        self.assertFalse(validate_card_luhn("49927398717")) # Zła cyfra kontrolna
-        self.assertFalse(validate_card_luhn("1234"))        # Za krótka
+        self.assertFalse(validate_card_luhn("49927398717"))     # Zła cyfra kontrolna
+        self.assertFalse(validate_card_luhn("1234"))            # Za krótka
         self.assertFalse(validate_card_luhn("not-a-number-strings"))
 
     def test_luhn_wrong_type(self):
@@ -80,6 +81,7 @@ class TestValidatorsUnittest(unittest.TestCase):
 
     def tearDown(self):
         pass
+
 
 if __name__ == "__main__":
     unittest.main()
