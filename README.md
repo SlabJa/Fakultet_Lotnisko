@@ -4,7 +4,7 @@ A comprehensive airline ticket booking and airport check-in management system im
 
 ## Features
 
-* Ticket booking and dynamic pricing (age, class, baggage)
+* Ticket booking and pricing (age, class, baggage)
 * Loyalty program management (earning miles, tiers, and discounts)
 * Flight seating management and automatic seat assignment
 * Airport check-in, security baggage scanning, and boarding gate validation
