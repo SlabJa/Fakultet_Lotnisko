@@ -46,7 +46,12 @@ project/
 3. Install dependencies (if necessary): pip install -r requirements.txt
 
 ## Running Tests
-* Run all tests with: pytest
+* Run all tests with:   pytest
 
-* For detailed output and BDD steps: pytest -v
-* To check branch coverage: pytest --cov=src --cov-branch
+* For detailed output and BDD steps:  pytest -v
+* To check branch coverage:           pytest --cov=src --cov-branch
+
+## Additional code quality checks
+* **Pylint** (Static analysis and code quality rating): pylint ./src ./tests
+* **Vulture** (Dead code detection):                    vulture ./src
+* **Flake8** (Style & PEP 8 enforcement):               flake8 ./src ./tests
